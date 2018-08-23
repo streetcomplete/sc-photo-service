@@ -18,6 +18,10 @@
     }
 
     $file_name = bin2hex(random_bytes(16)) . $ALLOWED_FILE_TYPES[$file_type];
-    file_put_contents($PHOTOS_TMP_DIR . '/' . $file_name, $photo);
+    $result = file_put_contents($PHOTOS_TMP_DIR . '/' . $file_name, $photo);
+
+    if($result === FALSE) {
+        return_error(500, 'Cannot save file');
+    }
 
 ?>
