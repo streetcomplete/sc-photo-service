@@ -7,7 +7,7 @@
 
     $PHOTOS_TMP_DIR = '../photos_tmp';
     $PHOTOS_SRV_DIR = '../photos_srv';
-    $PHOTOS_SRV_URL = 'http://localhost/pics';
+    $PHOTOS_SRV_URL = 'https://example.org/pics';
 
     $ALLOWED_FILE_TYPES = array(
         'image/jpeg' => '.jpg'

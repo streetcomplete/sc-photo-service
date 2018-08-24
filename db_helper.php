@@ -17,17 +17,24 @@
 
         function create_table() {
             $this->mysqli->query('CREATE TABLE IF NOT EXISTS photos(
-                                    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                    file_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                    file_ext VARCHAR(10) NOT NULL,
                                     creation_time DATETIME NOT NULL,
-                                    file_name VARCHAR(50) NOT NULL,
                                     note_id BIGINT UNSIGNED
                                 )'
             );
         }
 
-        function insert_photo($file_name) {
-            $stmt = $this->mysqli->prepare('INSERT INTO photos(creation_time, file_name) VALUES (NOW(), ?)');
-            $stmt->bind_param('s', $file_name);
+        function new_photo($file_ext) {
+            $stmt = $this->mysqli->prepare('INSERT INTO photos(file_ext, creation_time) VALUES (?, NOW())');
+            $stmt->bind_param('s', $file_ext);
+            $stmt->execute();
+            return $this->mysqli->insert_id;
+        }
+
+        function delete_photo($file_id) {
+            $stmt = $this->mysqli->prepare('DELETE FROM photos WHERE file_id=?');
+            $stmt->bind_param('i', $file_id);
             $stmt->execute();
         }
 

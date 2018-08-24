@@ -18,21 +18,22 @@
         return_error(415, 'File type not allowed');
     }
 
-    $file_name = bin2hex(random_bytes(16)) . $ALLOWED_FILE_TYPES[$file_type];
-    $file_path = $PHOTOS_TMP_DIR . '/' . $file_name;
-    $result = file_put_contents($file_path, $photo);
-
-    if($result === FALSE) {
-        return_error(500, 'Cannot save file');
-    }
+    $file_ext = $ALLOWED_FILE_TYPES[$file_type];
 
     try {
 
         $db_helper = new DBHelper();
-        $db_helper->insert_photo($file_name);
+        $file_id = $db_helper->new_photo($file_ext);
+        $file_name = strval($file_id) . $file_ext;
+        $file_path = $PHOTOS_TMP_DIR . '/' . $file_name;
+        $ret_val = file_put_contents($file_path, $photo);
+
+        if($ret_val === FALSE) {
+            $db_helper->delete_photo($file_id);
+            return_error(500, 'Cannot save file');
+        }
 
     } catch(mysqli_sql_exception $e) {
-        unlink($file_path);
         return_error(500, 'Database failure');
     }
 
