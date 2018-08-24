@@ -38,6 +38,6 @@
     }
 
     http_response_code(200);
-    exit(json_encode(array('future_url' => $PHOTOS_SRV_URL . '/' . $file_name)));
+    exit(json_encode(array('future_url' => trim($PHOTOS_SRV_URL, '/') . '/' . $file_name)));
 
 ?>
