@@ -5,6 +5,7 @@
     require_once 'db_helper.php';
 
     $OSM_NOTES_API = "https://api.openstreetmap.org/api/0.6/notes/";
+    $PHOTO_URL_SEARCH_REGEX = '~(?<!\S)' . preg_quote(trim($PHOTOS_SRV_URL, '/')) . '/(\d+)\.[a-z]+(?!\S)~i';
 
     header('Content-Type: application/json');
 
@@ -26,12 +27,27 @@
     }
 
     $note_fetch_url = $OSM_NOTES_API . strval($note_id) . '.json';
-    $note_raw = http_get($note_fetch_url, NULL, $response_info);
+    $response = fetch_url($note_fetch_url);
 
-    if($response_info->response_code != 200) {
-        return_error($response_info->response_code, 'Error fetching OSM note');
+    if($response->code != 200) {
+        return_error($response->code, 'Error fetching OSM note');
     }
 
-    $note_json = json_decode($note_raw);
+    $note = json_decode($response->body, true);
+
+    if($note['properties']['status'] !== 'open') {
+        return_error(403, 'OSM note is already closed');
+    }
+
+    $relevant_comments = "";
+
+    foreach($note['properties']['comments'] as $comment) {
+        if(array_key_exists('uid', $comment)) {
+            $relevant_comments .= "\n" . $comment['text'];
+        }
+    }
+
+    preg_match_all($PHOTO_URL_SEARCH_REGEX, $relevant_comments, $matches);
+    $photo_ids = array_unique(array_map('intval', $matches[1]));
 
 ?>
