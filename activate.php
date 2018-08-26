@@ -69,7 +69,6 @@
             }
 
             $db_helper->activate_photo($photo['file_id'], $note_id);
-
         }
 
         http_response_code(200);

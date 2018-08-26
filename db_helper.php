@@ -38,6 +38,22 @@
             $stmt->execute();
         }
 
+        function get_and_delete_old_inactive_photos() {
+            require 'config.php';
+            $stmt = $this->mysqli->prepare('SELECT file_id, file_ext FROM photos
+                                            WHERE note_id IS NULL
+                                            AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)');
+            $stmt->bind_param('i', $TMP_FILE_STORE_PERIOD_IN_HOURS);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            if(count($result) > 0) {
+                $id_list = implode(',', array_column($result, 'file_id'));
+                $this->mysqli->query("DELETE FROM photos
+                                      WHERE file_id IN ($id_list)");
+            }
+            return $result;
+        }
+
         function get_inactive_photos($photo_ids) {
             $in = str_repeat('?,', count($photo_ids) - 1) . '?';
             $stmt = $this->mysqli->prepare("SELECT file_id, file_ext FROM photos

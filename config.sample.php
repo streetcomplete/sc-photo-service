@@ -13,4 +13,6 @@
         'image/jpeg' => '.jpg'
     );
 
+    $TMP_FILE_STORE_PERIOD_IN_HOURS = 24;
+
 ?>
