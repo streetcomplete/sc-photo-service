@@ -21,12 +21,12 @@
                                     file_ext VARCHAR(10) NOT NULL,
                                     creation_time DATETIME NOT NULL,
                                     note_id BIGINT UNSIGNED
-                                )'
-            );
+                                 )');
         }
 
         function new_photo($file_ext) {
-            $stmt = $this->mysqli->prepare('INSERT INTO photos(file_ext, creation_time) VALUES (?, NOW())');
+            $stmt = $this->mysqli->prepare('INSERT INTO photos(file_ext, creation_time)
+                                            VALUES (?, NOW())');
             $stmt->bind_param('s', $file_ext);
             $stmt->execute();
             return $this->mysqli->insert_id;
@@ -35,6 +35,23 @@
         function delete_photo($file_id) {
             $stmt = $this->mysqli->prepare('DELETE FROM photos WHERE file_id=?');
             $stmt->bind_param('i', $file_id);
+            $stmt->execute();
+        }
+
+        function get_inactive_photos($photo_ids) {
+            $in = str_repeat('?,', count($photo_ids) - 1) . '?';
+            $stmt = $this->mysqli->prepare("SELECT file_id, file_ext FROM photos
+                                            WHERE file_id IN ($in)
+                                            AND note_id IS NULL");
+            $stmt->bind_param(str_repeat('i', count($photo_ids)), ...$photo_ids);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        }
+
+        function activate_photo($photo_id, $note_id) {
+            $stmt = $this->mysqli->prepare("UPDATE photos SET note_id = ?
+                                            WHERE file_id = ?");
+            $stmt->bind_param('ii', $note_id, $photo_id);
             $stmt->execute();
         }
 

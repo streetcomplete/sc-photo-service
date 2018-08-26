@@ -50,4 +50,33 @@
     preg_match_all($PHOTO_URL_SEARCH_REGEX, $relevant_comments, $matches);
     $photo_ids = array_unique(array_map('intval', $matches[1]));
 
+    if(count($photo_ids) == 0) {
+        http_response_code(200);
+        exit(json_encode(array('found_photos' => 0, 'activated_photos' => 0)));
+    }
+
+    try {
+
+        $db_helper = new DBHelper();
+        $photos = $db_helper->get_inactive_photos($photo_ids);
+
+        foreach($photos as $photo) {
+            $file_name = $photo['file_id'] . $photo['file_ext'];
+            $ret_val = rename($PHOTOS_TMP_DIR . '/' . $file_name, $PHOTOS_SRV_DIR . '/' . $file_name);
+
+            if($ret_val === FALSE) {
+                return_error(500, 'Cannot move file');
+            }
+
+            $db_helper->activate_photo($photo['file_id'], $note_id);
+
+        }
+
+        http_response_code(200);
+        exit(json_encode(array('found_photos' => count($photo_ids), 'activated_photos' => count($photos))));
+
+    } catch(mysqli_sql_exception $e) {
+        return_error(500, 'Database failure');
+    }
+
 ?>
