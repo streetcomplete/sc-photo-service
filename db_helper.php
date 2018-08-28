@@ -54,6 +54,12 @@
             return $result;
         }
 
+        function get_active_photos() {
+            $result = $this->mysqli->query('SELECT file_id, file_ext, note_id
+                                            FROM photos WHERE note_id IS NOT NULL');
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
         function get_inactive_photos($photo_ids) {
             $in = str_repeat('?,', count($photo_ids) - 1) . '?';
             $stmt = $this->mysqli->prepare("SELECT file_id, file_ext FROM photos
