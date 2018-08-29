@@ -1,0 +1,9 @@
+Order Allow,Deny
+
+<Files upload.php>
+    Allow from all
+</Files>
+
+<Files activate.php>
+    Allow from all
+</Files>
