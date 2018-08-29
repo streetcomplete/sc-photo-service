@@ -43,7 +43,7 @@
             $stmt = $this->mysqli->prepare('SELECT file_id, file_ext FROM photos
                                             WHERE note_id IS NULL
                                             AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)');
-            $stmt->bind_param('i', $TMP_FILE_STORE_PERIOD_IN_HOURS);
+            $stmt->bind_param('i', $MAX_TMP_LIFETIME_HOURS);
             $stmt->execute();
             $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             if(count($result) > 0) {

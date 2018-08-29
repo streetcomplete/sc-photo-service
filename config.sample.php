@@ -13,6 +13,7 @@
         'image/jpeg' => '.jpg'
     );
 
-    $TMP_FILE_STORE_PERIOD_IN_HOURS = 24;
+    $MAX_TMP_LIFETIME_HOURS = 24;
+    $MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
 
 ?>
