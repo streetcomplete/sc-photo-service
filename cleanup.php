@@ -32,7 +32,7 @@
             }
 
             if($osm_note->status === 'closed'
-               and strtotime($osm_note->closed_at . ' +' . $MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS . ' days') > strtotime('now')) {
+               and strtotime($osm_note->closed_at . ' +' . $MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS . ' days') < strtotime('now')) {
                 $db_helper->delete_photo($photo['file_id']);
                 unlink($file_path);
             }
