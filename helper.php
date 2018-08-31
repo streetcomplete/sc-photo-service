@@ -5,13 +5,13 @@
         exit(json_encode(array('error' => $message)));
     }
 
-    function fetch_url($url) {
+    function fetch_url($url, $user = NULL, $pass = NULL) {
         $response = new stdClass();
-        $options = array(
-            CURLOPT_RETURNTRANSFER => TRUE
-        );
         $curl = curl_init($url);
-        curl_setopt_array($curl, $options);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        if($user !== NULL and $pass !== NULL) {
+            curl_setopt($curl, CURLOPT_USERPWD, $user . ":" . $pass);
+        }
         $response->body = curl_exec($curl);
         $response->code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
         curl_close($curl);

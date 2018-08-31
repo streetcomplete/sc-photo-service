@@ -18,7 +18,7 @@
             $this->note_id = $note_id;
 
             $note_fetch_url = $this->OSM_NOTES_API . strval($note_id) . '.json';
-            $response = fetch_url($note_fetch_url);
+            $response = fetch_url($note_fetch_url, $OSM_API_USER, $OSM_API_PASS);
             $this->http_code = $response->code;
             if($this->http_code != 200) {
                 return;
