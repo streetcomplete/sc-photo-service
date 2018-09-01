@@ -10,7 +10,13 @@
         return_error(405, 'You need to POST a photo');
     }
 
-    $photo = file_get_contents('php://input');
+    $content_length = intval($_SERVER['HTTP_CONTENT_LENGTH']);
+
+    if($content_length > $MAX_UPLOAD_FILE_SIZE_KB * 1000) {
+        return_error(413, 'Payload too large');
+    }
+
+    $photo = file_get_contents('php://input', FALSE, NULL, 0, $content_length);
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $file_type = $finfo->buffer($photo);
 

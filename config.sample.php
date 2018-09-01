@@ -13,6 +13,8 @@
         'image/jpeg' => '.jpg'
     );
 
+    $MAX_UPLOAD_FILE_SIZE_KB = 5000;
+
     $MAX_TMP_LIFETIME_HOURS = 24;
     $MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
 
