@@ -54,6 +54,22 @@
             return $result;
         }
 
+        function get_and_delete_oldest_active_photos($num) {
+            $stmt = $this->mysqli->prepare('SELECT file_id, file_ext FROM photos
+                                            WHERE note_id IS NOT NULL
+                                            ORDER BY creation_time
+                                            LIMIT ?');
+            $stmt->bind_param('i', $num);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            if(count($result) > 0) {
+                $id_list = implode(',', array_column($result, 'file_id'));
+                $this->mysqli->query("DELETE FROM photos
+                                      WHERE file_id IN ($id_list)");
+            }
+            return $result;
+        }
+
         function get_active_photos() {
             $result = $this->mysqli->query('SELECT file_id, file_ext, note_id
                                             FROM photos WHERE note_id IS NOT NULL');

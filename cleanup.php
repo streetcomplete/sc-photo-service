@@ -7,9 +7,9 @@
     require_once 'osm_photo_note.php';
 
     $db_helper = new DBHelper();
-    $old_photos = $db_helper->get_and_delete_old_inactive_photos();
 
-    foreach($old_photos as $photo) {
+    $old_inactive_photos = $db_helper->get_and_delete_old_inactive_photos();
+    foreach($old_inactive_photos as $photo) {
         $file_name = $photo['file_id'] . $photo['file_ext'];
         unlink($PHOTOS_TMP_DIR . '/' . $file_name);
     }
@@ -38,6 +38,14 @@
             }
         }
 
+    }
+
+    while(directory_size($PHOTOS_SRV_DIR) > $MAX_SRV_DIR_SIZE_MB * 1000000) {
+        $oldest_active_photos = $db_helper->get_and_delete_oldest_active_photos(10);
+        foreach($oldest_active_photos as $photo) {
+            $file_name = $photo['file_id'] . $photo['file_ext'];
+            unlink($PHOTOS_SRV_DIR . '/' . $file_name);
+        }
     }
 
 ?>

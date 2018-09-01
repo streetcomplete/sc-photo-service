@@ -18,4 +18,15 @@
         return $response;
     }
 
+    function directory_size($dir) {
+        $size = 0;
+        $path = realpath($dir);
+        if($path !== FALSE and $path != '' and file_exists($path)) {
+            foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
+                $size += $object->getSize();
+            }
+        }
+        return $size;
+    }
+
 ?>
