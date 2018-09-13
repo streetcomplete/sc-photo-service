@@ -1,0 +1,16 @@
+{
+    "require": {
+        "vlucas/phpdotenv": "^2.5",
+        "slim/slim": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "StreetComplete\\": "src/classes/"
+        }
+    },
+    "scripts": {
+        "migrate": "php ./bin/cli.php migrate",
+        "cleanup": "php ./bin/cli.php cleanup",
+        "dev": "php -S 127.0.0.1:8080 -t ./public"
+    }
+}
