@@ -1,1 +1,4 @@
 config.php
+.env
+vendor/*
+.php_cs.cache
