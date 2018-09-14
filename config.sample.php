@@ -1,25 +1,27 @@
 <?php
+class Config
+{
+    const DEBUG = false;
 
-    $DB_HOST = "localhost";
-    $DB_DATABASE = "photoservice";
-    $DB_USER = "photoservice_user";
-    $DB_PASSWORD = "photoservice_pw";
+    const DB_HOST = "localhost";
+    const DB_NAME = "photoservice";
+    const DB_USER = "photoservice_user";
+    const DB_PASS = "photoservice_pw";
 
-    $PHOTOS_TMP_DIR = '../photos_tmp';
-    $PHOTOS_SRV_DIR = '../photos_srv';
-    $PHOTOS_SRV_URL = 'https://example.org/pics';
+    const PHOTOS_TMP_DIR = '../photos_tmp';
+    const PHOTOS_SRV_DIR = '../photos_srv';
+    const PHOTOS_SRV_URL = 'https://example.org/pics';
 
-    $ALLOWED_FILE_TYPES = array(
+    const ALLOWED_FILE_TYPES = array(
         'image/jpeg' => '.jpg'
     );
 
-    $MAX_UPLOAD_FILE_SIZE_KB = 5000;
-    $MAX_SRV_DIR_SIZE_MB = 2000;
+    const MAX_UPLOAD_FILE_SIZE_KB = 5000;
+    const MAX_SRV_DIR_SIZE_MB = 2000;
 
-    $MAX_TMP_LIFETIME_HOURS = 24;
-    $MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
+    const MAX_TMP_LIFETIME_HOURS = 24;
+    const MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
 
-    $OSM_API_USER = NULL;
-    $OSM_API_PASS = NULL;
-
-?>
+    const OSM_API_USER = null;
+    const OSM_API_PASS = null;
+}
