@@ -8,13 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     returnError(405, 'You need to POST a photo');
 }
 
+$max_content_length = Config::MAX_UPLOAD_FILE_SIZE_KB * 1000;
 $content_length = intval($_SERVER['HTTP_CONTENT_LENGTH']);
 
-if ($content_length > Config::MAX_UPLOAD_FILE_SIZE_KB * 1000) {
+if ($content_length > 0 and $content_length > $max_content_length) {
     returnError(413, 'Payload too large');
 }
 
-$photo = file_get_contents('php://input', false, null, 0, $content_length);
+$photo = file_get_contents('php://input', false, null, 0, $max_content_length);
+
+if (strlen($photo) > $max_content_length) {
+    returnError(413, 'Payload too large');
+}
+
 $finfo = new finfo(FILEINFO_MIME_TYPE);
 $file_type = $finfo->buffer($photo);
 
