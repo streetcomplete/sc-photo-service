@@ -4,21 +4,21 @@ require_once 'config.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 class DBHelper
 {
-    private $connection;
+    private $_connection;
 
     public function __construct()
     {
-        $this->connection = new mysqli(Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME);
+        $this->_connection = new mysqli(Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME);
     }
 
     public function __destruct()
     {
-        $this->connection->close();
+        $this->_connection->close();
     }
 
     public function createTable()
     {
-        $this->connection->query(
+        $this->_connection->query(
             'CREATE TABLE IF NOT EXISTS photos(
                 file_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 file_ext VARCHAR(10) NOT NULL,
@@ -30,25 +30,25 @@ class DBHelper
 
     public function newPhoto($file_ext)
     {
-        $stmt = $this->connection->prepare(
+        $stmt = $this->_connection->prepare(
             'INSERT INTO photos(file_ext, creation_time)
                 VALUES (?, NOW())'
         );
         $stmt->bind_param('s', $file_ext);
         $stmt->execute();
-        return $this->connection->insert_id;
+        return $this->_connection->insert_id;
     }
 
     public function deletePhoto($file_id)
     {
-        $stmt = $this->connection->prepare('DELETE FROM photos WHERE file_id=?');
+        $stmt = $this->_connection->prepare('DELETE FROM photos WHERE file_id=?');
         $stmt->bind_param('i', $file_id);
         $stmt->execute();
     }
 
     public function getAndDeleteOldInactivePhotos()
     {
-        $stmt = $this->connection->prepare(
+        $stmt = $this->_connection->prepare(
             'SELECT file_id, file_ext FROM photos
                 WHERE note_id IS NULL
                 AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)'
@@ -58,7 +58,7 @@ class DBHelper
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         if (count($result) > 0) {
             $id_list = implode(',', array_column($result, 'file_id'));
-            $this->connection->query(
+            $this->_connection->query(
                 "DELETE FROM photos
                     WHERE file_id IN ($id_list)"
             );
@@ -68,7 +68,7 @@ class DBHelper
 
     public function getAndDeleteOldestActivePhotos($num)
     {
-        $stmt = $this->connection->prepare(
+        $stmt = $this->_connection->prepare(
             'SELECT file_id, file_ext FROM photos
                 WHERE note_id IS NOT NULL
                 ORDER BY creation_time
@@ -79,7 +79,7 @@ class DBHelper
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         if (count($result) > 0) {
             $id_list = implode(',', array_column($result, 'file_id'));
-            $this->connection->query(
+            $this->_connection->query(
                 "DELETE FROM photos
                     WHERE file_id IN ($id_list)"
             );
@@ -89,7 +89,7 @@ class DBHelper
 
     public function getActivePhotos()
     {
-        $result = $this->connection->query(
+        $result = $this->_connection->query(
             'SELECT file_id, file_ext, note_id
                 FROM photos WHERE note_id IS NOT NULL'
         );
@@ -99,7 +99,7 @@ class DBHelper
     public function getInactivePhotos($photo_ids)
     {
         $in = str_repeat('?,', count($photo_ids) - 1) . '?';
-        $stmt = $this->connection->prepare(
+        $stmt = $this->_connection->prepare(
             "SELECT file_id, file_ext FROM photos
                 WHERE file_id IN ($in)
                 AND note_id IS NULL"
@@ -111,7 +111,7 @@ class DBHelper
 
     public function activatePhoto($photo_id, $note_id)
     {
-        $stmt = $this->connection->prepare(
+        $stmt = $this->_connection->prepare(
             "UPDATE photos SET note_id = ?
                 WHERE file_id = ?"
         );
