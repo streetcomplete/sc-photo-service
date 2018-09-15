@@ -1,12 +1,7 @@
 <?php
 require_once 'config.php';
 
-if (Config::DEBUG) {
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-} else {
-    mysqli_report(MYSQLI_REPORT_OFF);
-}
-
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 class DBHelper
 {
     private $connection;

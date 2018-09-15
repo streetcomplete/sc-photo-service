@@ -1,8 +1,6 @@
 <?php
 class Config
 {
-    const DEBUG = false;
-
     const DB_HOST = "localhost";
     const DB_NAME = "photoservice";
     const DB_USER = "photoservice_user";
