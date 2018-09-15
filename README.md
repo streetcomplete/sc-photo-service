@@ -4,7 +4,7 @@ This is a photo service intended for [StreetComplete](https://github.com/westnor
 
 This simple upload service tries to prevent abuse by requiring an association between an uploaded photo and a publicly visible OpenStreetMap note. If the requirements do not longer hold, the file is removed. Therefore, the software queries the OSM API and parses notes for photo URLs.
 
-Programming language, repository structure and other design decisions are based on the requirements imposed by the intended hosting infrastructure for StreetComplete.
+Programming language, repository structure and other design decisions are based on the requirements imposed by the intended hosting infrastructure for StreetComplete. Requires PHP 5.6 or later.
 
 
 ## Deployment
