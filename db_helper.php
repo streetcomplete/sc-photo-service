@@ -1,7 +1,4 @@
 <?php
-if (!file_exists('config.php')) {
-    exit('Please copy \'config.sample.php\' to \'config.php\'');
-}
 require_once 'config.php';
 
 if (Config::DEBUG) {
