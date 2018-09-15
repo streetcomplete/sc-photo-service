@@ -33,7 +33,7 @@ foreach ($active_photos as $photo) {
         }
 
         if ($osm_note->status === 'closed'
-            && strtotime($osm_note->closed_at . ' +' . (int)Config::MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS . ' days') < strtotime('now')
+            and strtotime($osm_note->closed_at . ' +' . Config::MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS . ' days') < strtotime('now')
         ) {
             $db_helper->deletePhoto($photo['file_id']);
             unlink($file_path);
