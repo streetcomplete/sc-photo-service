@@ -53,7 +53,8 @@ class DBHelper
                 WHERE note_id IS NULL
                 AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)'
         );
-        $stmt->bind_param('i', Config::MAX_TMP_LIFETIME_HOURS);
+        $max_age = Config::MAX_TMP_LIFETIME_HOURS;
+        $stmt->bind_param('i', $max_age);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         if (count($result) > 0) {
