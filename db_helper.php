@@ -46,7 +46,7 @@ class DBHelper
         $stmt->execute();
     }
 
-    public function getAndDeleteOldInactivePhotos()
+    public function getOldInactivePhotos()
     {
         $stmt = $this->_connection->prepare(
             'SELECT file_id, file_ext FROM photos
@@ -57,17 +57,10 @@ class DBHelper
         $stmt->bind_param('i', $max_age);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        if (count($result) > 0) {
-            $id_list = implode(',', array_column($result, 'file_id'));
-            $this->_connection->query(
-                "DELETE FROM photos
-                    WHERE file_id IN ($id_list)"
-            );
-        }
         return $result;
     }
 
-    public function getAndDeleteOldestActivePhotos($num)
+    public function getOldestActivePhotos($num)
     {
         $stmt = $this->_connection->prepare(
             'SELECT file_id, file_ext FROM photos
@@ -78,13 +71,6 @@ class DBHelper
         $stmt->bind_param('i', $num);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        if (count($result) > 0) {
-            $id_list = implode(',', array_column($result, 'file_id'));
-            $this->_connection->query(
-                "DELETE FROM photos
-                    WHERE file_id IN ($id_list)"
-            );
-        }
         return $result;
     }
 
