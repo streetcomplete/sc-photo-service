@@ -6,8 +6,9 @@ class Config
     const DB_USER = "photoservice_user";
     const DB_PASS = "photoservice_pw";
 
-    const PHOTOS_TMP_DIR = '../photos_tmp';
-    const PHOTOS_SRV_DIR = '../photos_srv';
+    // MUST be absolute paths
+    const PHOTOS_TMP_DIR = '/var/www/httpdocs/photos_tmp';
+    const PHOTOS_SRV_DIR = '/var/www/httpdocs/photos_srv';
     const PHOTOS_SRV_URL = 'https://example.org/pics';
 
     const ALLOWED_FILE_TYPES = array(
