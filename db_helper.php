@@ -49,7 +49,7 @@ class DBHelper
     public function getOldInactivePhotos()
     {
         $stmt = $this->_connection->prepare(
-            'SELECT file_id, file_ext FROM photos
+            'SELECT file_id, file_ext, note_id FROM photos
                 WHERE note_id IS NULL
                 AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)'
         );
@@ -63,7 +63,7 @@ class DBHelper
     public function getOldestActivePhotos($num)
     {
         $stmt = $this->_connection->prepare(
-            'SELECT file_id, file_ext FROM photos
+            'SELECT file_id, file_ext, note_id FROM photos
                 WHERE note_id IS NOT NULL
                 ORDER BY creation_time
                 LIMIT ?'
