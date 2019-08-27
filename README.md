@@ -1,10 +1,29 @@
 # SC-Photo-Service
 
-This is a photo service intended for [StreetComplete](https://github.com/westnordost/StreetComplete). It allows to upload photos during a survey, which are taken to help resolving an OpenStreetMap note. This project exists because previously used photo upload services went offline due to legal problems.
+This is a photo service intended for [StreetComplete](https://github.com/westnordost/StreetComplete), but it could also be used in other applications.
+It allows to upload photos during a survey, which are taken to help resolving an OpenStreetMap note.
+This project exists because previously used photo upload services went offline due to legal problems.
 
-This simple upload service tries to prevent abuse by requiring an association between an uploaded photo and a publicly visible OpenStreetMap note. If the requirements do not longer hold, the file is removed. Therefore, the software queries the OSM API and parses notes for photo URLs.
+This simple upload service tries to prevent abuse by requiring an association between an uploaded photo and an open, publicly visible OpenStreetMap note.
+If the requirement no longer holds, the file gets removed.
+Therefore, the software queries the OSM API and parses photo URLs out of notes.
 
-Programming language, repository structure and other design decisions are based on the requirements imposed by the intended hosting infrastructure for StreetComplete. Requires PHP 5.6 or later.
+Programming language, repository structure and other design decisions are based on the requirements imposed by the intended hosting infrastructure for StreetComplete.
+Requires PHP 5.6 or later.
+
+
+## How does it work?
+
+- The client (i.e. the StreetComplete app) uploads a photo file to the server.
+- The file will be quarantined, but the client immediately receives a URL where the photo can be found once activated.
+- The URL can be included in an OSM note to reference the photo.
+- After the note is published at OSM, the client sends an activate request to the server including the OSM note ID.
+- The server will retrieve the note and looks for URLs referencing the photo.
+- If found, the photo will be released from quarantine and hence is accessible via the given URL.
+
+A cleanup cron job periodically fetches notes associated with photos and checks if the note is closed or if the URL vanished (moderated).
+Photos which are no longer necessary are deleted after a certain waiting period.
+It is also possible to specify a maximum storage size, which, when exhausted, will lead to the deletion of the oldest photos.
 
 
 ## Deployment
