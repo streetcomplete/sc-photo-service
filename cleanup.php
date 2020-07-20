@@ -12,7 +12,8 @@ function deletePhoto($photo)
 {
     global $db_helper;
     $file_path = ($photo['note_id']==NULL ? Config::PHOTOS_TMP_DIR : Config::PHOTOS_SRV_DIR) . DIRECTORY_SEPARATOR . $photo['file_id'] . $photo['file_ext'];
-    $success = unlink($file_path);
+    echo "delete photo ".$photo['file_id']."\n";	
+	$success = unlink($file_path);
     if ($success) {
         $db_helper->deletePhoto($photo['file_id']);
     } else {
