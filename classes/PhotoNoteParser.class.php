@@ -1,23 +1,23 @@
 <?php
 
-require_once 'OSMPhotoNote.class.php';
+require_once 'PhotoNote.class.php';
 
-/** Parses OSM note into the OSMPhotoNote data structure */
-class OSMPhotoNoteParser
+/** Parses OSM note into the PhotoNote data structure */
+class PhotoNoteParser
 {
-	private $photos_url;
+    private $photos_url;
 
     public function __construct(string $photos_url)
     {
         $this->photos_url = $photos_url;
     }
-	
-    public function parse(string $json): OSMPhotoNote
+    
+    public function parse(string $json): PhotoNote
     {
-		$note = json_decode($response->body, true);
-		
-		$r = new OSMPhotoNote();
-		$r->note_id = $note['properties']['id'];
+        $note = json_decode($json, true);
+        
+        $r = new PhotoNote();
+        $r->note_id = $note['properties']['id'];
         $r->status = $note['properties']['status'];
         if ($r->status == 'closed') {
             $r->closed_at = $note['properties']['closed_at'];
