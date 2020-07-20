@@ -9,6 +9,7 @@ class Config
     // SHOULD be absolute paths, e.g. for directory unaware cron
     const PHOTOS_TMP_DIR = '/var/www/httpdocs/photos_tmp';
     const PHOTOS_SRV_DIR = '/var/www/httpdocs/photos_srv';
+    const CLEANUP_LOG_FILE = '/logs/photo_cleanup.log';
     const PHOTOS_SRV_URL = 'https://example.org/pics';
 
     const ALLOWED_FILE_TYPES = array(

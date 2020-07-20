@@ -1,6 +1,8 @@
 <?php
-require_once 'db_helper.php';
-require_once 'helper.php';
+require_once 'config.php';
+require_once 'classes/PhotosDao.class.php';
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 header('Content-Type: application/json');
 
@@ -27,19 +29,29 @@ if (!array_key_exists($file_type, Config::ALLOWED_FILE_TYPES)) {
 $file_ext = Config::ALLOWED_FILE_TYPES[$file_type];
 
 try {
-    $db_helper = new DBHelper();
-    $file_id = $db_helper->newPhoto($file_ext);
+    $mysqli = new mysqli(Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME);
+    $dao = new PhotosDao($mysqli);
+    $file_id = $dao->newPhoto($file_ext);
     $file_name = strval($file_id) . $file_ext;
     $file_path = Config::PHOTOS_TMP_DIR . DIRECTORY_SEPARATOR . $file_name;
     $ret_val = file_put_contents($file_path, $photo);
 
     if ($ret_val === false) {
-        $db_helper->deletePhoto($file_id);
+        $dao->deletePhoto($file_id);
         returnError(500, 'Cannot save file');
     }
+    $mysqli->close();
 } catch (mysqli_sql_exception $e) {
     returnError(500, 'Database failure');
 }
 
 http_response_code(200);
-exit(json_encode(array('future_url' => trim(Config::PHOTOS_SRV_URL, '/') . DIRECTORY_SEPARATOR . $file_name)));
+exit(json_encode(array(
+    'future_url' => trim(Config::PHOTOS_SRV_URL, '/') . DIRECTORY_SEPARATOR . $file_name
+)));
+
+function returnError($code, $message)
+{
+    http_response_code($code);
+    exit(json_encode(array('error' => $message)));
+}

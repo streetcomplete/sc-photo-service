@@ -1,11 +1,11 @@
 <?php
-require_once 'OSMPhotoNoteParser.class.php';
-require_once 'OSMPhotoNote.class.php';
+require_once 'PhotoNoteParser.class.php';
+require_once 'PhotoNote.class.php';
 
 /** Fetches photo notes from the OSM API 0.6
  *
  * See https://wiki.openstreetmap.org/wiki/API_v0.6#Read:_GET_.2Fapi.2F0.6.2Fnotes.2F.23id */
-class OSMPhotoNoteFetcher
+class PhotoNoteFetcher
 {
     const OSM_NOTES_API = 'https://api.openstreetmap.org/api/0.6/notes/';
 
@@ -17,20 +17,20 @@ class OSMPhotoNoteFetcher
     {
         $this->user = $user;
         $this->pass = $pass;
-        $this->parser = new OSMPhotoNoteParser($photos_url);
+        $this->parser = new PhotoNoteParser($photos_url);
     }
 
-    public function fetch(int $note_id): ?OSMPhotoNote
+    public function fetch(int $note_id): ?PhotoNote
     {
         $url = self::OSM_NOTES_API . strval($note_id) . '.json';
-        $response = fetchUrl($url, $this->user, $this->pass);
+        $response = $this->fetchUrl($url, $this->user, $this->pass);
         if ($response->code == 404 || $response->code == 410) {
             return null;
         }
-		else if ($response->code != 200) {
+        else if ($response->code != 200) {
             throw new Exception('OSM API returned error code ' . $response->code);
         }
-		return $this->parser->parse($response->body);
+        return $this->parser->parse($response->body);
     }
     
     function fetchUrl($url, $user = null, $pass = null)

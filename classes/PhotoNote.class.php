@@ -1,7 +1,7 @@
 <?php
 
 /** Represents an OSM note to which a photo is attached */
-class OSMPhotoNote
+class PhotoNote
 {
     public $note_id;
     public $status;
