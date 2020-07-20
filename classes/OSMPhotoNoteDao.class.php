@@ -4,10 +4,12 @@
 class OSMPhotoNoteDao
 {
     private $mysqli;
+	private $max_tmp_lifetime;
 
-    public function __construct($mysqli)
+    public function __construct($mysqli, $max_tmp_lifetime)
     {
         $this->mysqli = $mysqli;
+        $this->max_tmp_lifetime = $max_tmp_lifetime;
         $this->createTable();
     }
     
@@ -23,15 +25,19 @@ class OSMPhotoNoteDao
         );
     }
     
-    public function newPhoto($file_ext)
+    public function newPhoto(string $file_ext): int
     {
-        $stmt = $this->mysqli->prepare(
-            'INSERT INTO photos(file_ext, creation_time)
-                VALUES (?, NOW())'
-        );
+        $stmt = $this->mysqli->prepare('INSERT INTO photos(file_ext, creation_time) VALUES (?, NOW())');
         $stmt->bind_param('s', $file_ext);
         $stmt->execute();
         return $this->mysqli->insert_id;
+    }
+
+    public function activatePhoto(int $photo_id, int $note_id)
+    {
+        $stmt = $this->mysqli->prepare("UPDATE photos SET note_id = ? WHERE file_id = ?");
+        $stmt->bind_param('ii', $note_id, $photo_id);
+        $stmt->execute();
     }
 
     public function deletePhoto(int $file_id)
@@ -48,8 +54,7 @@ class OSMPhotoNoteDao
                 WHERE note_id IS NULL
                 AND creation_time < ADDDATE(NOW(), INTERVAL -? HOUR)'
         );
-        $max_age = Config::MAX_TMP_LIFETIME_HOURS;
-        $stmt->bind_param('i', $max_age);
+        $stmt->bind_param('i', $max_tmp_lifetime);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         return $result;
@@ -92,13 +97,5 @@ class OSMPhotoNoteDao
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function activatePhoto(int $photo_id, int $note_id)
-    {
-        $stmt = $this->mysqli->prepare(
-            "UPDATE photos SET note_id = ?
-                WHERE file_id = ?"
-        );
-        $stmt->bind_param('ii', $note_id, $photo_id);
-        $stmt->execute();
-    }
+
 }
