@@ -133,7 +133,7 @@ foreach ($active_notes as $note_id => $photos) {
 // finally, delete oldest photos first if there is not enough space
 info("Deleting oldest photos if above quota");
 while (directorySize(Config::PHOTOS_SRV_DIR) > Config::MAX_SRV_DIR_SIZE_MB * 1000000) {
-    $oldest_active_photos = $db_helper->getOldestActivePhotos(10);
+    $oldest_active_photos = $dao->getOldestActivePhotos(10);
     deletePhotos($oldest_active_photos);
 }
 
