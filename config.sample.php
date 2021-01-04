@@ -24,4 +24,8 @@ class Config
 
     const OSM_API_USER = null;
     const OSM_API_PASS = null;
+	
+	/* time the cronjob should spend on photo cleanup (i.e. should be lower than
+     * PHP timeout) */
+    const MAX_CRON_CLEANUP_IN_SECONDS = 300;
 }

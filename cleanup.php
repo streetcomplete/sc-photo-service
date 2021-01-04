@@ -82,6 +82,8 @@ function deletePhotoFromDB($file_id)
     info($file_id);
 }
 
+$start = time();
+
 $fetcher = new PhotoNoteFetcher(Config::PHOTOS_SRV_URL, Config::OSM_API_USER, Config::OSM_API_PASS);
 $mysqli = new mysqli(Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME);
 $dao = new PhotosDao($mysqli);
@@ -111,6 +113,9 @@ foreach ($active_photos as $photo) {
 // delete activated photos whose associated note has been closed or deleted
 info("Deleting photos whose note has been closed or deleted");
 foreach ($active_notes as $note_id => $photos) {
+	// timeout: we did enough for today...
+	if (time() - $start > Config::MAX_CRON_CLEANUP_IN_SECONDS) break;
+	
     $osm_note = $fetcher->fetch($note_id);
     if (!$osm_note) {
         deletePhotos($photos);
