@@ -60,3 +60,9 @@ On success, it will return a JSON with information about the number of found and
 On failure, the JSON will contain an error key, e.g.:
 
 `{'error': 'Error fetching OSM note'}`
+
+## Example Client Code
+
+In StreetComplete, the following class communicates with the mentioned API, you can take this as an example 
+
+[StreetCompleteImageUploader.kt](https://github.com/streetcomplete/StreetComplete/blob/master/app/src/main/java/de/westnordost/streetcomplete/data/osmnotes/StreetCompleteImageUploader.kt)
