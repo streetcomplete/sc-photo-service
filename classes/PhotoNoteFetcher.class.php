@@ -9,21 +9,19 @@ class PhotoNoteFetcher
 {
     const OSM_NOTES_API = 'https://api.openstreetmap.org/api/0.6/notes/';
 
-    private $user;
-    private $pass;
+    private $osm_auth_token;
     private $parser;
 
-    public function __construct(string $photos_url, string $user = null, string $pass = null)
+    public function __construct(string $photos_url, string $osm_auth_token = null)
     {
-        $this->user = $user;
-        $this->pass = $pass;
+        $this->osm_auth_token = $osm_auth_token;
         $this->parser = new PhotoNoteParser($photos_url);
     }
 
     public function fetch(int $note_id): ?PhotoNote
     {
         $url = self::OSM_NOTES_API . strval($note_id) . '.json';
-        $response = $this->fetchUrl($url, $this->user, $this->pass);
+        $response = $this->fetchUrl($url, $this->osm_auth_token);
         if ($response->code == 404 || $response->code == 410) {
             return null;
         }
@@ -33,14 +31,14 @@ class PhotoNoteFetcher
         return $this->parser->parse($response->body);
     }
     
-    function fetchUrl($url, $user = null, $pass = null)
+    function fetchUrl($url, string $auth_token = null)
     {
         $response = new stdClass();
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_USERAGENT, 'StreetComplete Photo Service'); 
-        if ($user !== null and $pass !== null) {
-            curl_setopt($curl, CURLOPT_USERPWD, $user . ":" . $pass);
+        if ($auth_token !== null) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer ".$auth_token));
         }
         $response->body = curl_exec($curl);
         $response->code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);

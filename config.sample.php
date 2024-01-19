@@ -22,8 +22,7 @@ class Config
     const MAX_TMP_LIFETIME_HOURS = 24;
     const MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
 
-    const OSM_API_USER = null;
-    const OSM_API_PASS = null;
+    const OSM_OAUTH_TOKEN = null;
 	
 	/* time the cronjob should spend on photo cleanup (i.e. should be lower than
      * PHP timeout) */

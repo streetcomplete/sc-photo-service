@@ -84,7 +84,7 @@ function deletePhotoFromDB($file_id)
 
 $start = time();
 
-$fetcher = new PhotoNoteFetcher(Config::PHOTOS_SRV_URL, Config::OSM_API_USER, Config::OSM_API_PASS);
+$fetcher = new PhotoNoteFetcher(Config::PHOTOS_SRV_URL, Config::OSM_OAUTH_TOKEN);
 $mysqli = new mysqli(Config::DB_HOST, Config::DB_USER, Config::DB_PASS, Config::DB_NAME);
 $dao = new PhotosDao($mysqli);
 
