@@ -65,4 +65,4 @@ On failure, the JSON will contain an error key, e.g.:
 
 In StreetComplete, the following class communicates with the mentioned API, you can take this as an example 
 
-[StreetCompleteImageUploader.kt](https://github.com/streetcomplete/StreetComplete/blob/master/app/src/main/java/de/westnordost/streetcomplete/data/osmnotes/StreetCompleteImageUploader.kt)
+[PhotoServiceApiClient.kt](https://github.com/streetcomplete/StreetComplete/blob/master/app/src/main/java/de/westnordost/streetcomplete/data/osmnotes/PhotoServiceApiClient.kt)
