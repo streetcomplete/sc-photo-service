@@ -5,11 +5,11 @@ require_once 'PhotoNote.class.php';
 /** Parses OSM note into the PhotoNote data structure */
 class PhotoNoteParser
 {
-    private $photos_url;
+    private $photos_urls;
 
-    public function __construct(string $photos_url)
+    public function __construct(array $photos_urls)
     {
-        $this->photos_url = $photos_url;
+        $this->photos_urls = $photos_urls;
     }
     
     public function parse(string $json): PhotoNote
@@ -29,10 +29,13 @@ class PhotoNoteParser
                 $relevant_comments .= "\n" . $comment['text'];
             }
         }
-        $search_regex = '~(?<!\S)' . preg_quote(trim($this->photos_url, '/')) . '/(\d+)\.[a-z]+(?!\S)~i';
-        preg_match_all($search_regex, $relevant_comments, $matches);
-        $r->photo_ids = array_unique(array_map('intval', $matches[1]));
-
+        $r->photo_ids = array();
+        foreach ($this->photos_urls as $photo_url) {
+            $search_regex = '~(?<!\S)' . preg_quote(trim($photo_url, '/')) . '/(\d+)\.[a-z]+(?!\S)~i';
+            preg_match_all($search_regex, $relevant_comments, $matches);
+            $photo_ids = array_map('intval', $matches[1]);
+            $r->photo_ids = array_merge($r->photo_ids, $photo_ids);
+        }
         return $r;
     }
 }

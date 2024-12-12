@@ -11,6 +11,7 @@ class Config
     const PHOTOS_SRV_DIR = '/var/www/httpdocs/photos_srv';
     const CLEANUP_LOG_FILE = '/logs/photo_cleanup.log';
     const PHOTOS_SRV_URL = 'https://example.org/pics';
+    const ALTERNATIVE_PHOTOS_SRV_URLS = array('https://old.example.org/pics');
 
     const ALLOWED_FILE_TYPES = array(
         'image/jpeg' => '.jpg'
@@ -23,8 +24,8 @@ class Config
     const MAX_LIFETIME_AFTER_NOTE_CLOSED_DAYS = 7;
 
     const OSM_OAUTH_TOKEN = null;
-	
-	/* time the cronjob should spend on photo cleanup (i.e. should be lower than
+
+    /* time the cronjob should spend on photo cleanup (i.e. should be lower than
      * PHP timeout) */
     const MAX_CRON_CLEANUP_IN_SECONDS = 300;
 }

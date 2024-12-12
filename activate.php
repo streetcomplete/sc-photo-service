@@ -24,7 +24,8 @@ if (!is_int($note_id)) {
     returnError(400, 'OSM note ID needs to be numeric');
 }
 
-$fetcher = new PhotoNoteFetcher(Config::PHOTOS_SRV_URL, Config::OSM_OAUTH_TOKEN);
+$photos_urls = array(Config::PHOTOS_SRV_URL, ...Config::ALTERNATIVE_PHOTOS_SRV_URLS);
+$fetcher = new PhotoNoteFetcher($photos_urls, Config::OSM_OAUTH_TOKEN);
 $osm_note = $fetcher->fetch($note_id);
 
 if (!$osm_note) {

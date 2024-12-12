@@ -12,10 +12,10 @@ class PhotoNoteFetcher
     private $osm_auth_token;
     private $parser;
 
-    public function __construct(string $photos_url, string $osm_auth_token = null)
+    public function __construct(array $photos_urls, string $osm_auth_token = null)
     {
         $this->osm_auth_token = $osm_auth_token;
-        $this->parser = new PhotoNoteParser($photos_url);
+        $this->parser = new PhotoNoteParser($photos_urls);
     }
 
     public function fetch(int $note_id): ?PhotoNote
