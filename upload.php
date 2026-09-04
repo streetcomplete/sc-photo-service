@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $max_content_length = Config::MAX_UPLOAD_FILE_SIZE_KB * 1000;
-$content_length = intval($_SERVER['HTTP_CONTENT_LENGTH']);
+$content_length = intval($_SERVER['CONTENT_LENGTH']);
 
 if ($content_length > 0 and $content_length > $max_content_length) {
     returnError(413, 'Payload too large');
